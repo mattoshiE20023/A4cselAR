@@ -1,0 +1,46 @@
+name: MacOS Build
+# コードがmainにpushされた時とpullreqが飛んできた時に自動で実行し手動でも実行できるようにする
+  
+on:
+  push:
+    branches: main
+  pull_request: 
+    branches: main
+  workflow_dispatch: {}
+
+# 連続して実行されたときに一つ前の実行中のジョブが停止されるようにする
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  unity-Build:
+    name: Run the unity build steps
+    runs-on: macos-latest
+    steps:
+      # Actionsがリポジトリにアクセスできるようにする
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      # LibraryをCacheしてBuildを高速化する
+      - name: Cache Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**','ProjectSettings/**') }}
+          restore-keys: Library-
+      # WindowsBuildする
+      - name: Run the MacOS build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: iOS
+          unityVersion: 2022.3.30f1
+          buildName: A4cselAR
+      # Build成果物をアップロードする
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: Build
+          path: build
