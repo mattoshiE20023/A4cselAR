@@ -4,7 +4,7 @@ on: # このActionsを実行するタイミングの指定
 jobs:
   activation:
     name: Request manual activation file
-    runs-on: ubuntu-latest # 動作するOSを制作する ubuntu以外にwindowsやmac-osが選べるが課金体系に注意！
+    runs-on: windows-latest # 動作するOSを制作する ubuntu以外にwindowsやmac-osが選べるが課金体系に注意！
     steps:
     - name: Request manual activation file # Licenceを要求する部分
       id: getManualLicenseFile
