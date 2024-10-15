@@ -2,8 +2,8 @@ name: MacOS Build
 # コードがmainにpushされた時とpullreqが飛んできた時に自動で実行し手動でも実行できるようにする
 
 on:
-  push:
-    branches: main
+#  push:
+#    branches: main
   workflow_dispatch: {}
 
 jobs:
