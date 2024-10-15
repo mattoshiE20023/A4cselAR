@@ -1,9 +1,6 @@
 name: MacOS Build
 # コードがmainにpushされた時とpullreqが飛んできた時に自動で実行し手動でも実行できるようにする
 
-env:
-  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-
 on:
   push:
     branches: main
