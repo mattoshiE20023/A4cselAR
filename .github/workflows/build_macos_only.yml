@@ -1,4 +1,4 @@
-name: Development build
+name: MacOS Build Only
 
 on:
 #  push:
