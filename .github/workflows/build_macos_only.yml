@@ -54,45 +54,51 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Fix File Permissions
-        run: |
-          find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
+#      - name: Fix File Permissions
+#        run: |
+#          find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
 
 
       # LibraryをCacheしてBuildを高速化する
-#      - uses: actions/cache@v3
-#        with:
-#          path: Library
-#          key: Library-${{ hashFiles('Assets/**', 'Packages/**','ProjectSettings/**') }}
-#          restore-keys:
-#            Library-
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**','ProjectSettings/**') }}
+          restore-keys:
+            Library-
             
       # MacOS Buildする
-#      - name: Build
-#        uses: game-ci/unity-builder@v4
-#        env:
-#          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-#          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-#          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-#        with:
-#          targetPlatform: ${{ matrix.targetPlatform }}
-#          versioning: Custom
-#          version: 0.1.${{ github.run_number }}
+      - name: Build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          versioning: Custom
+          version: 0.1.${{ github.run_number }}
           
- #     - uses: actions/upload-artifact@v3
- #       with:
- #         name: Build-${{ matrix.targetPlatform }}
- #         path: build/${{ matrix.targetPlatform }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
 
- #    - uses: actions/upload-artifact@v3
- #       with:
- #         name: Build-iOS-ipa
- #         path: ${{ env.IPA_OUTPUT_PATH }}
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
 
-#      - name: Build Xcode
-#        uses: maierj/fastlane-action@v2.0.0
-#        with:
-#          lane: 'ios development'
+      - name: Build Xcode
+        uses: maierj/fastlane-action@v2.0.0
+        with:
+          lane: 'ios development'
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-iOS-ipa
+          path: ${{ env.IPA_OUTPUT_PATH }}
 
 #      - name: Cleanup
 #        if: always()
