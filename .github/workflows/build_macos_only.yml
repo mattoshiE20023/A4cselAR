@@ -28,6 +28,8 @@ jobs:
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          IPA_OUTPUT_PATH: ${{ format('{0}/Build.ipa', github.workspace) }}
+          IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -85,7 +87,7 @@ jobs:
  #    - uses: actions/upload-artifact@v3
  #       with:
  #         name: Build-iOS-ipa
- #         path: build/output
+ #         path: ${{ env.IPA_OUTPUT_PATH }}
 
 #      - name: Build Xcode
 #        uses: maierj/fastlane-action@v2.0.0
