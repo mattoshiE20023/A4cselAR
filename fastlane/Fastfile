@@ -1,0 +1,72 @@
+keychain_name = "temporary_keychain"
+keychain_password = SecureRandom.base64
+
+platform :ios do
+  lane :development do
+    certificates
+    provisining_uuid = sh("grep UUID -A1 -a #{ENV["MOBILEPROVISION_PATH"]} | grep -io \"[-A-Z0-9]\\{36\\}\"").strip
+
+    build_options = {}
+    build_options[:scheme] = "Unity-iPhone"
+    build_options[:output_name] = File.basename(ENV['IPA_OUTPUT_PATH'])
+    build_options[:output_directory] = File.dirname(ENV['IPA_OUTPUT_PATH'])
+    build_options[:configuration] = "Debug"
+    build_options[:project] = "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
+    build_options[:export_method] = "ad-hoc"
+    build_options[:codesigning_identity] = ENV['CODESIGNING_IDENTITY']
+    build_options[:export_options] = {
+      signingStyle: "manual",
+      compileBitcode: false,
+      provisioningProfiles: {
+        "#{ENV["IOS_APP_ID"]}": "#{provisining_uuid}"
+      },
+    }
+    build_options[:skip_profile_detection] = true
+
+    update_app_identifier(
+      xcodeproj: build_options[:project],
+      plist_path: "Info.plist",
+      app_identifier: ENV["IOS_APP_ID"],
+    )
+
+    update_project_provisioning(
+      xcodeproj: build_options[:project],
+      target_filter: build_options[:scheme],
+      profile: ENV["MOBILEPROVISION_PATH"],
+      code_signing_identity: build_options[:codesigning_identity]
+    )
+
+    build_ios_app(build_options)
+  end
+
+  lane :certificates do
+    cleanup_keychain
+    create_keychain(
+      name: keychain_name,
+      password: keychain_password,
+      default_keychain: true,
+      lock_when_sleeps: true,
+      timeout: 3600,
+      unlock: true
+    )
+    import_certificate(
+      certificate_path: ENV["CERTIFICATES_PATH"],
+      certificate_password: ENV["CERTIFICATES_PASSWORD"],
+      keychain_name: keychain_name,
+      keychain_password: keychain_password
+    )
+    install_provisioning_profile(path: ENV["MOBILEPROVISION_PATH"])
+  end
+
+  lane :cleanup_keychain do
+    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+      delete_keychain(name: keychain_name)
+    end
+  end
+
+  after_all do
+    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+      delete_keychain(name: keychain_name)
+    end
+  end
+end
