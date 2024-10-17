@@ -31,21 +31,21 @@ jobs:
             Library-
             
       # Unity Buildする
-      - name: Unity Build
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          targetPlatform: ${{ matrix.targetPlatform }}
-          versioning: Custom
-          version: 0.1.${{ github.run_number }}
+#      - name: Unity Build
+#        uses: game-ci/unity-builder@v4
+#        env:
+#          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+#          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+#          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+#        with:
+#          targetPlatform: ${{ matrix.targetPlatform }}
+#          versioning: Custom
+#          version: 0.1.${{ github.run_number }}
           
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: Build-${{ matrix.targetPlatform }}
+#          path: build/${{ matrix.targetPlatform }}
 
   build_xcode:
     runs-on: macos-latest
@@ -59,13 +59,13 @@ jobs:
         env:
           BUILD_CERTIFICATES_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           CERTIFICATES_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          CERTIFICATES_PATH: ${{ format('{0}/Certificates.p12', github.workspace) }}
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          KEYCHAIN_PATH: ${{ format('{0}/app-signing.keychain-db', github.workspace) }}
           IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
-          CERTIFICATES_PATH: ${{ format('{0}/Certificates.p12', github.workspace) }}
           MOBILEPROVISION_PATH: ${{ format('{0}/Target.mobileprovision', github.workspace) }}
           IPA_OUTPUT_PATH: ${{ format('{0}/Build.ipa', github.workspace) }}
-          KEYCHAIN_PATH: ${{ format('{0}/app-signing.keychain-db', github.workspace) }}
         run: |
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATES_BASE64" | base64 --decode -o $CERTIFICATES_PATH
