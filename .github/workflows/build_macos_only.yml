@@ -100,10 +100,27 @@ jobs:
           name: Build-iOS-ipa
           path: ${{ env.IPA_OUTPUT_PATH }}
 
-#      - name: Cleanup
-#        if: always()
-#        uses: geekyeggo/delete-artifact@v1
-#        with:
-#          name: Build-iOS
 
-    
+      - name: Archive Project
+        run: |                        
+          xcodebuild archive -project MyApp/MyApp.xcodeproj \
+                             -scheme MainApp \
+                             -sdk iphoneos \
+                             -configuration Release \
+                             -archivePath MainApp.xcarchive \
+                             CODE_SIGNING_ALLOWED=NO
+
+      - name: Create ExportOptions.plist
+        run: |
+          echo '${{ secrets.EXPORT_OPTIONS }}' > ExportOptions.plist
+
+      - name: Export IPA
+        run: |   
+          xcodebuild -exportArchive \
+                     -archivePath MainApp.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath app.ipa \
+                     -allowProvisioningUpdates \
+                     -authenticationKeyPath `pwd`/private_keys/AuthKey_${{ secrets.APPLE_API_ISSUER_ID }}.p8 \
+                     -authenticationKeyID ${{ secrets.APPLE_API_KEY_ID }} \
+                     -authenticationKeyIssuerID ${{ secrets.APPLE_API_ISSUER_ID }}
