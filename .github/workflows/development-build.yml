@@ -107,6 +107,7 @@ jobs:
           IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           MOBILEPROVISION_PATH: ${{ format('{0}/Target.mobileprovision', github.workspace) }}
           IPA_OUTPUT_PATH: ${{ format('{0}/Build.ipa', github.workspace) }}
+          IOS_APP_ID: ${{ secrets.BUNDLE_ID }}
         with:
           lane: 'ios development'
 
