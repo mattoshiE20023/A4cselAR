@@ -4,7 +4,7 @@ keychain_password = SecureRandom.base64
 platform :ios do
   lane :development do
     certificates
-#    provisining_uuid = sh("grep UUID -A1 -a #{ENV["MOBILEPROVISION_PATH"]} | grep -io \"[-A-Z0-9]\\{36\\}\"").strip
+    provisining_uuid = sh("grep UUID -A1 -a #{ENV["MOBILEPROVISION_PATH"]} | grep -io \"[-A-Z0-9]\\{36\\}\"").strip
 
     build_options = {}
     build_options[:scheme] = "Unity-iPhone"
@@ -50,15 +50,13 @@ platform :ios do
       unlock: true
     )
 
-    install_provisioning_profile(path: ENV["MOBILEPROVISION_PATH"])
-
     import_certificate(
       certificate_path: ENV["CERTIFICATES_PATH"],
       certificate_password: ENV["CERTIFICATES_PASSWORD"],
       keychain_name: keychain_name,
       keychain_password: keychain_password
     )
-
+    install_provisioning_profile(path: ENV["MOBILEPROVISION_PATH"])
   end
 
   lane :cleanup_keychain do
