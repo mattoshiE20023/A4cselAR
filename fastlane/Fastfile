@@ -13,7 +13,7 @@ platform :ios do
     build_options[:configuration] = "Debug"
     build_options[:project] = "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
     build_options[:export_method] = "ad-hoc"
-    build_options[:codesigning_identity] = ENV['CODESIGNING_IDENTITY']
+#    build_options[:codesigning_identity] = ENV['CODESIGNING_IDENTITY']
     build_options[:export_options] = {
       signingStyle: "manual",
       compileBitcode: false,
