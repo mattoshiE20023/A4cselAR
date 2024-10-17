@@ -7,49 +7,49 @@ on:
   workflow_dispatch: {}
 
 jobs:
-#  build_unity:
-#    name: Build ${{ matrix.targetPlatform }}
-#    runs-on: ubuntu-latest
+  build_unity:
+    name: Build ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
 
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        targetPlatform:
-#          - iOS
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - iOS
     
-#    steps:
+    steps:
       # Actionsがリポジトリにアクセスできるようにする
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       
       # LibraryをCacheしてBuildを高速化する
-#      - uses: actions/cache@v3
-#        with:
-#          path: Library
-#          key: Library-${{ hashFiles('Assets/**', 'Packages/**','ProjectSettings/**') }}
-#          restore-keys:
-#            Library-
-#            
-#      # MacOS Buildする
-#      - name: Build
-#        uses: game-ci/unity-builder@v4
-#        env:
-#          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-#          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-#          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-#        with:
-#          targetPlatform: ${{ matrix.targetPlatform }}
-#          versioning: Custom
-#          version: 0.1.${{ github.run_number }}
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**','ProjectSettings/**') }}
+          restore-keys:
+            Library-
+            
+      # Unity Buildする
+      - name: Unity Build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          versioning: Custom
+          version: 0.1.${{ github.run_number }}
           
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: Build-${{ matrix.targetPlatform }}
-#          path: build/${{ matrix.targetPlatform }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
 
   build_xcode:
     runs-on: macos-latest
-#    needs: build_unity
+    needs: build_unity
     
     steps:
       - name: Checkout repository
@@ -57,7 +57,7 @@ jobs:
         
       - name: Install the Apple certificate and provisioning profile
         env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          BUILD_CERTIFICATES_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           CERTIFICATES_PASSWORD: ${{ secrets.P12_PASSWORD }}
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
@@ -68,7 +68,7 @@ jobs:
           KEYCHAIN_PATH: ${{ format('{0}/app-signing.keychain-db', github.workspace) }}
         run: |
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATES_PATH
+          echo -n "$BUILD_CERTIFICATES_BASE64" | base64 --decode -o $CERTIFICATES_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $MOBILEPROVISION_PATH
 
           # create temporary keychain
@@ -85,25 +85,25 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $MOBILEPROVISION_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: Build-iOS
-#          path: build/iOS
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Build-iOS
+          path: build/iOS
 
 #      - name: Fix File Permissions
 #        run: |
 #          find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
 
-#      - name: Build Xcode
-#        uses: maierj/fastlane-action@v2.0.0
-#        with:
-#          lane: 'ios development'
+      - name: Build Xcode
+        uses: maierj/fastlane-action@v2.0.0
+        with:
+          lane: 'ios development'
 
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: Build-iOS-ipa
-#          path: build/output
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-iOS-ipa
+          path: build/output
 
 #      - name: Cleanup
 #        if: always()
