@@ -115,7 +115,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Build-iOS-ipa
-          path: build/output
+          path: ${{ env.IPA_OUTPUT_PATH }}
 
 #      - name: Cleanup
 #        if: always()
