@@ -94,7 +94,7 @@ jobs:
         uses: maierj/fastlane-action@v2.0.0
         env:
           MOBILEPROVISION_PATH: ${{ format('{0}/Target.mobileprovision', github.workspace) }}
-          IPA_OUTPUT_PATH: ${{ format('{0}/Build/A4cselAR.ipa', github.workspace) }}
+          IPA_OUTPUT_PATH: ${{ format('{0}/Output/A4cselAR.ipa', github.workspace) }}
           IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           IOS_APP_ID: ${{ secrets.BUNDLE_ID }}
           TEAM_ID: ${{ secrets.TEAM_ID }}
@@ -106,7 +106,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Build-iOS-ipa
-          path: ${{ format('{0}/Build', github.workspace) }}
+          path: ${{ format('{0}/Output', github.workspace) }}
 
 #      - name: Cleanup
 #        if: always()
