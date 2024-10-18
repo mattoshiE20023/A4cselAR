@@ -63,9 +63,7 @@ jobs:
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
           KEYCHAIN_PATH: ${{ format('{0}/app-signing.keychain-db', github.workspace) }}
-          IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           MOBILEPROVISION_PATH: ${{ format('{0}/Target.mobileprovision', github.workspace) }}
-          IPA_OUTPUT_PATH: ${{ format('{0}/Build.ipa', github.workspace) }}
         run: |
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATES_BASE64" | base64 --decode -o $CERTIFICATES_PATH
@@ -91,31 +89,24 @@ jobs:
           name: Build-iOS
           path: build/iOS
 
-#      - name: Fix File Permissions
-#        run: |
-#          find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
 
       - name: Build Xcode
         uses: maierj/fastlane-action@v2.0.0
         env:
-          BUILD_CERTIFICATES_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          CERTIFICATES_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          CERTIFICATES_PATH: ${{ format('{0}/Certificates.p12', github.workspace) }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          KEYCHAIN_PATH: ${{ format('{0}/app-signing.keychain-db', github.workspace) }}
-          IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           MOBILEPROVISION_PATH: ${{ format('{0}/Target.mobileprovision', github.workspace) }}
-          IPA_OUTPUT_PATH: ${{ format('{0}/Build.ipa', github.workspace) }}
+          IPA_OUTPUT_PATH: ${{ format('{0}/Build/A4cselAR.ipa', github.workspace) }}
+          IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           IOS_APP_ID: ${{ secrets.BUNDLE_ID }}
           TEAM_ID: ${{ secrets.TEAM_ID }}
+          CERTIFICATES_PATH: ${{ format('{0}/Certificates.p12', github.workspace) }}
+          CERTIFICATES_PASSWORD: ${{ secrets.P12_PASSWORD }}
         with:
           lane: 'ios development'
 
       - uses: actions/upload-artifact@v3
         with:
           name: Build-iOS-ipa
-          path: ${{ format('{0}', github.workspace) }}
+          path: ${{ format('{0}'/Build, github.workspace) }}
 
 #      - name: Cleanup
 #        if: always()
