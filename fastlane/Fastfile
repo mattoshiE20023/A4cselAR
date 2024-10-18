@@ -11,7 +11,7 @@ platform :ios do
     build_options[:output_name] = File.basename(ENV['IPA_OUTPUT_PATH'])
     build_options[:output_directory] = File.dirname(ENV['IPA_OUTPUT_PATH'])
     build_options[:configuration] = "Debug"
-    build_options[:project] = "#{ENV['IOS_BUILD_PATH']}/Unity-iPhone.xcodeproj"
+    build_options[:project] = "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
     build_options[:export_method] = "enterprise"
     build_options[:codesigning_identity] = "iPhone Distribution"
     build_options[:export_options] = {
