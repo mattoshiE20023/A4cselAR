@@ -13,7 +13,7 @@ platform :ios do
     build_options[:configuration] = "Debug"
     build_options[:project] = "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
     build_options[:export_method] = "ad-hoc"
-    build_options[:codesigning_identity] = "iPhone Development"
+    build_options[:codesigning_identity] = "iPhone Distribution"
     build_options[:export_options] = {
       signingStyle: "manual",
       compileBitcode: false,
@@ -27,6 +27,13 @@ platform :ios do
       xcodeproj: build_options[:project],
       plist_path: "Info.plist",
       app_identifier: ENV["IOS_APP_ID"],
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: build_options[:project],
+      team_id: ENV["TEAM_ID"],
+      bundle_identifier: ENV["IOS_APP_ID"],
     )
 
     update_project_provisioning(
