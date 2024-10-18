@@ -22,9 +22,16 @@ MonoBehaviour:
     by default.'
   preview: {fileID: 2800000, guid: 5843b284d48a6ff4193b606a018b6bd2, type: 3}
   dependencies:
+  - dependency: {fileID: 2800000, guid: 9858b8d6bc5e649ca94c5830ec79be14, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2100000, guid: 7f1d579c79ac0442e8d4a7f213a675d0, type: 2}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: cb09035d41f4b43b7bd4f62030163d77, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2100000, guid: 1ff7e79fd64f7469a96dff1e97f179a9, type: 2}
+    instantiationMode: 0
   - dependency: {fileID: 2800000, guid: 8236c695e72414e7889fb3f4d8226fde, type: 3}
     instantiationMode: 1
-  - dependency: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-    instantiationMode: 1
   templatePipeline: {fileID: 0}
+  badge: {fileID: 0}
   addToDefaults: 0
