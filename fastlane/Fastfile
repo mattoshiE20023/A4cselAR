@@ -29,13 +29,6 @@ platform :ios do
       app_identifier: ENV["IOS_APP_ID"],
     )
 
-#    update_code_signing_settings(
-#      use_automatic_signing: false,
-#      path: build_options[:project],
-#      team_id: ENV["TEAM_ID"],
-#      bundle_identifier: ENV["IOS_APP_ID"],
-#    )
-
     update_code_signing_settings(
         use_automatic_signing: 'true', 
         path: build_options[:project],
