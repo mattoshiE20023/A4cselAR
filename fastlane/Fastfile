@@ -12,7 +12,6 @@ platform :ios do
     build_options[:output_directory] = File.dirname(ENV['IPA_OUTPUT_PATH'])
     build_options[:configuration] = "Debug"
     build_options[:project] = "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
-#    build_options[:export_method] = "ad-hoc"
     build_options[:export_method] = "enterprise"
     build_options[:codesigning_identity] = "iPhone Distribution"
     build_options[:export_options] = {
@@ -30,11 +29,24 @@ platform :ios do
       app_identifier: ENV["IOS_APP_ID"],
     )
 
+#    update_code_signing_settings(
+#      use_automatic_signing: false,
+#      path: build_options[:project],
+#      team_id: ENV["TEAM_ID"],
+#      bundle_identifier: ENV["IOS_APP_ID"],
+#    )
+
     update_code_signing_settings(
-      use_automatic_signing: false,
-      path: build_options[:project],
-      team_id: ENV["TEAM_ID"],
-      bundle_identifier: ENV["IOS_APP_ID"],
+        use_automatic_signing: 'true', 
+        path: build_options[:project],
+    )
+    update_code_signing_settings(
+        use_automatic_signing: 'false', 
+        path: build_options[:project],
+        team_id: ENV["TEAM_ID"],
+        targets: build_options[:scheme],
+        code_sign_identity: build_options[:codesigning_identity],
+        bundle_identifier: ENV["IOS_APP_ID"],
     )
 
     update_project_provisioning(
