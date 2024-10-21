@@ -2,7 +2,7 @@ name: Development build
 
 # このworkflowを実行するトリガー
 on:
-#  push: {}
+# push: {}
   workflow_dispatch: {}
 
 # 実行する中身
