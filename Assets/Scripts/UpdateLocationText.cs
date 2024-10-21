@@ -7,6 +7,11 @@ public class updateLocationText : MonoBehaviour
 {
     public TextMeshPro location_text;
 
+
+    private void Start()
+    {
+        location_text.text = "Location updating now...";
+    }
     // Update is called once per frame
     void Update()
     {
