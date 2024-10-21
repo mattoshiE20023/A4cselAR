@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Location : MonoBehaviour
@@ -9,6 +10,8 @@ public class Location : MonoBehaviour
     public float latitude;
     public float longitude;
     public float altitude;
+
+    public TextMeshPro location_text;
 
     private void Start()
     {
@@ -57,6 +60,7 @@ public class Location : MonoBehaviour
             latitude = Input.location.lastData.latitude;
             longitude = Input.location.lastData.longitude;
             altitude = Input.location.lastData.altitude;
+            location_text.text = $"lat:{Location.Instance.latitude}\nlon:{Location.Instance.longitude}\nalt:{Location.Instance.altitude}";
             yield return new WaitForSeconds(1);
         }
     }
