@@ -1,4 +1,4 @@
-name: Development build
+name: Development build for MacOS
 
 # このworkflowを実行するトリガー
 on:
