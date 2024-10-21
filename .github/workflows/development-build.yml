@@ -41,7 +41,7 @@ jobs:
           version: 0.1.${{ github.run_number }}
 
       - name: Upload [xcodeproj]   
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
@@ -84,7 +84,7 @@ jobs:
           cp $MOBILEPROVISION_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Download [xcodeproj]
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Build-iOS
           path: build/iOS
@@ -104,7 +104,7 @@ jobs:
           lane: 'ios development'
 
       - name: upload ipa
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Build-iOS-ipa
           path: ${{ format('{0}/Output', github.workspace) }}
